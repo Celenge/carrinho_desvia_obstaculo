@@ -211,6 +211,10 @@ int main(void)
 
   /* Create the thread(s) */
   /* creation of defaultTask */
+
+
+
+
   defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
 
   /* creation of myTask02 */
@@ -594,6 +598,23 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
+
+  /////////////////////////////////////////
+  /*Configure GPIO pins : BUZZER_PIN */
+  GPIO_InitStruct.Pin = BUZZER_PIN;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(BUZZER_PORT, &GPIO_InitStruct);
+
+  // Configuração do pino meta como entrada
+  GPIO_InitStruct.Pin = Meta_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(Meta_GPIO_Port, &GPIO_InitStruct);
+/////////////////////////////////////////////
+
+
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI0_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(EXTI0_IRQn);
@@ -620,6 +641,23 @@ void ajustePWM (void){
 
 }
 
+
+void play_tone(uint16_t frequency, uint32_t duration) {
+    if (frequency == 0) {
+        HAL_Delay(duration);
+        return;
+    }
+
+    uint32_t period = 1000000 / frequency;
+    uint32_t half_period = period / 2;
+
+    for (uint32_t i = 0; i < (duration * 1000) / period; i++) {
+        HAL_GPIO_WritePin(BUZZER_PORT, BUZZER_PIN, GPIO_PIN_SET);
+        HAL_Delay(half_period);
+        HAL_GPIO_WritePin(BUZZER_PORT, BUZZER_PIN, GPIO_PIN_RESET);
+        HAL_Delay(half_period);
+    }
+}
 
 
 void IR_esquerdo_func(void){
@@ -880,7 +918,7 @@ void StartDefaultTask(void *argument)
 	// Espera os 5 segundos
 	osDelay(500);
 
-	for(;;)
+/*	for(;;)
   {
 		// Para o robô e espera 3 segundos
 		stopRobot();
@@ -945,7 +983,7 @@ void StartDefaultTask(void *argument)
 //		fowardRobot();
 //		osDelay(200);
 //		}
-  }
+  }*/
 }
 
   /* USER CODE END 5 */
@@ -962,6 +1000,15 @@ void StartTask02(void *argument)
 {
   /* USER CODE BEGIN StartTask02 */
   /* Infinite loop */
+
+
+	 if (HAL_GPIO_ReadPin(Meta_Pin, Meta_Pin) == GPIO_PIN_RESET) {
+	            // Move o carrinho por 0.5 segundos
+		 	 //play_tone(NOTE_A4, 500);
+	        }
+	        HAL_Delay(100);  // Pequeno atraso para evitar leituras contínuas
+
+
   for(;;)
   {
 

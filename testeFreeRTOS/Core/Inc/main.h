@@ -123,6 +123,14 @@ void Error_Handler(void);
 #define CallBack_PB7_GPIO_Port GPIOB
 #define CallBack_PB7_EXTI_IRQn EXTI9_5_IRQn
 
+// Definição do pino do buzzer
+#define BUZZER_PIN GPIO_PIN_12
+#define BUZZER_PORT GPIOA
+
+// Definição da frequência da nota (A4 = 440 Hz)
+#define NOTE_A4 440
+
+
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
