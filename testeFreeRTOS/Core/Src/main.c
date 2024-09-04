@@ -614,11 +614,7 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 void ajustePWM (void){
-
-
 }
-
-
 
 void IR_esquerdo_func(void){
 	 if((GPIOA -> IDR & GPIO_PIN_0)){ //IF STATUS PIN is HIGH
@@ -631,6 +627,7 @@ void IR_esquerdo_func(void){
 
 	    }
 }
+
 void  IR_direito_func(void){
 	 if((GPIOC -> IDR & GPIO_PIN_12)){ //IF STATUS PIN is HIGH
 		// printf("\rSensor Direito: Livre! \r\n");
@@ -641,6 +638,7 @@ void  IR_direito_func(void){
 	    	flagD=1;
 	    }
 }
+
 void IR_frente_esquerda_func(void){
 	 if((GPIOC -> IDR & GPIO_PIN_3)){ //IF STATUS PIN is HIGH
 		 //printf("\rSensor Frente  esquerdo: Livre! \r\n");
@@ -651,6 +649,7 @@ void IR_frente_esquerda_func(void){
 	    	flagFE = 1;
 	    }
 }
+
 void IR_frente_direita_func(void){
 	 if((GPIOC -> IDR & GPIO_PIN_2)){ //IF STATUS PIN is HIGH
 		 //printf("\rSensor frente direito: Livre! \r\n");
@@ -662,15 +661,15 @@ void IR_frente_direita_func(void){
 	    }
 }
 
-void CallBack_PC10(void)
-{
+void CallBack_PC10(void) {
 	count_esq = count_esq + 1;
 }
-void CallBack_PB7(void)
-{
+
+void CallBack_PB7(void) {
 	count_dir = count_dir + 1;
 
 }
+
 void CallBack_ExtePC13(void)
 {
 
@@ -707,47 +706,95 @@ int decreasePWMDIR(int currentPWM, int gain){
 	else return aux;
 }
 
-
-//para o carrinho
+/**
+ * @brief Para o carro, setando todos os pinos
+ * @param void
+ */
 void stopRobot(void){
-	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_SET);    //AMARELO CARRO
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_SET);    //GREEN DO CARRO
+    // Talvez se setar todos pra ...GPIO_PIN_RESET seja melhor do que o GPIO_PIN_SET
+    // Testar se der tempo
+
+    // Roda Direita
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_SET);    // AMARELO do carro
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_SET);    // GREEN do carro
+
+    // Roda Esquerda
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
 }
 
-//move pra trás - ré
+/**
+ * @brief Faz o carro andar para trás, setando ambas as rotações como anti-horárias
+ * @param void
+ */
 void backwardsRobot(void){
-	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_SET);    //AMARELO CARRO
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);  // GREEN DO CARRO
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
 
+    // Roda Direita
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_SET);     // AMARELO do carro
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);   // GREEN do carro
+
+    // Roda Esquerda
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
 }
 
+/**
+ * @brief Faz o carro andar para frente, setando ambas as rotações como horárias
+ * @param void
+ */
 void fowardRobot(void){
-	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_RESET);    //AMARELO CARRO //roda direita
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_SET);  // GREEN DO CARRO
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET); //esquerda
+
+    // Roda Direita
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_RESET);    // AMARELO do carro
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_SET);      // GREEN do carro
+
+    // Roda Esquerda
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
 
 }
+
+/**
+ * @brief Faz o carro se virar para a direita, setando o movimento da roda
+ * direita como horária e a esquerda como anti-horária.
+ * @param void
+ */
 void turnRight(void){
 
-	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_RESET);    //AMARELO CARRO
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_SET);  // GREEN DO CARRO
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
+    // Roda Direita
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_RESET);   // AMARELO do carro
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_SET);     // GREEN do carro
+
+    // Roda Esquerda
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
 }
+
+/**
+ * @brief Faz o carro se virar para a esquerda, setando o movimento da roda
+ * direita como anti-horária e a esquerda como horária.
+ * @param void
+ */
 void turnLeft(void){
 
-	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_SET);    //AMARELO CARRO
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);  // GREEN DO CARRO
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
+    // Roda Direita
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_SET);    // AMARELO do carro
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);  // GREEN do carro
+
+    // Roda Esquerda
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
 }
 
+/**
+ * @brief Faz o carro se virar para a esquerda em forma de curva, setando
+ * o movimento apenas na roda esquerda enquanto a direita é parada
+ * e então o carro anda para frente.
+ * @attention Não foi testada!
+ * @param void
+ */
 void movimento_curvaCompletaEsquerda(void){
+    // Desabilita os IRQs, pelo que entendi
 	HAL_NVIC_DisableIRQ(EXTI15_10_IRQn);
 	HAL_NVIC_DisableIRQ(EXTI2_IRQn);
 	HAL_NVIC_DisableIRQ(EXTI3_IRQn);
@@ -755,8 +802,10 @@ void movimento_curvaCompletaEsquerda(void){
 
 	count_esq=0;
 
+    // Seta a roda direita
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);
+    // Seta a roda esquerda
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
 
@@ -764,16 +813,24 @@ void movimento_curvaCompletaEsquerda(void){
 		// Falta fazer aqui dentro
 	}
 
+    // Faz o carro andar para a frente
 	fowardRobot();
 
+    // Habilita os IRQs novamente
 	HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 	HAL_NVIC_EnableIRQ(EXTI2_IRQn);
 	HAL_NVIC_EnableIRQ(EXTI3_IRQn);
 	HAL_NVIC_EnableIRQ(EXTI0_IRQn);
-
 }
 
+/**
+ * @brief Faz o carro se virar para a direita em forma de curva, setando
+ * o movimento apenas na roda direita enquanto a esquerda é parada.
+ * @attention Não foi testada!
+ * @param void
+ */
 void movimento_curvaCompletaDireita(void){
+    // Desabilita os IRQs
 	HAL_NVIC_DisableIRQ(EXTI15_10_IRQn);
 	HAL_NVIC_DisableIRQ(EXTI2_IRQn);
 	HAL_NVIC_DisableIRQ(EXTI3_IRQn);
@@ -781,35 +838,44 @@ void movimento_curvaCompletaDireita(void){
 
 	count_dir=0;
 
+    // Seta a roda direita
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_SET);
+    // Seta a roda esquerda
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
 
 	while(count_dir != 46){
 		// Falta fazer aqui dentro
-
 	}
 
+    // Faz o carro andar para a frente
 	fowardRobot();
 
+    // Habilita os IRQs novamente
 	HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 	HAL_NVIC_EnableIRQ(EXTI2_IRQn);
 	HAL_NVIC_EnableIRQ(EXTI3_IRQn);
 	HAL_NVIC_EnableIRQ(EXTI0_IRQn);
 	HAL_NVIC_EnableIRQ(EXTI1_IRQn);
-
 }
 
+/**
+ * @brief Desabilita todos os IRQs
+ * @param void
+ */
 void disableIRs(void) {
 	HAL_NVIC_DisableIRQ(EXTI15_10_IRQn);
 	HAL_NVIC_DisableIRQ(EXTI2_IRQn);
 	HAL_NVIC_DisableIRQ(EXTI3_IRQn);
 	HAL_NVIC_DisableIRQ(EXTI0_IRQn);
 	HAL_NVIC_DisableIRQ(EXTI1_IRQn);
-
 }
 
+/**
+ * @brief Habilita todos os IRQs
+ * @param void
+ */
 void enableIRs(void) {
 	HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 	HAL_NVIC_EnableIRQ(EXTI2_IRQn);
@@ -818,137 +884,177 @@ void enableIRs(void) {
 	HAL_NVIC_EnableIRQ(EXTI1_IRQn);
 }
 
+/**
+ * @brief Faz o carro virar para a direita enquanto "parado" no mesmo lugar.
+ * Ativa a roda direita como horária e a roda esquerda como anti-horária, realizando o
+ * movimento por x segundos.
+ * @param segundos float - tempo em segundos que o veículo vai rotacionar
+ */
 void vira_direita(float segundos) {
+    // Desabilita os IRQs
 	disableIRs();
 
-
-	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_SET);    //AMARELO CARRO
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);  // GREEN DO CARRO
+    // Seta a roda direita
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);
+    // Seta a roda esquerda
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
 
-	float tempoTotal = 1000 * segundos;
+	float tempoTotal = 100 * segundos;
 
+    // Se movimenta no estado atual por x segundos
 	osDelay(tempoTotal);
 
+    // Habilita os IRQs
 	enableIRs();
 }
 
+/**
+ * @brief Faz o carro virar para a esquerda enquanto "parado" no mesmo lugar.
+ * Ativa a roda direita como anti-horária e a roda esquerda como horária, realizando o
+ * movimento por x segundos.
+ * @param segundos float - tempo em segundos que o veículo vai rotacionar
+ */
 void vira_esquerda(float segundos) {
+    // Desabilita os IRQs
 	disableIRs();
 
-	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_RESET);    //AMARELO CARRO
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_SET);  // GREEN DO CARRO
+    // Seta a roda direita
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_SET);
+    // Seta a roda esquerda
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
 
-	float tempoTotal = 1000 * segundos;
+	float tempoTotal = 100 * segundos;
 
+    // Se movimenta no estado atual por x segundos
 	osDelay(tempoTotal);
 
+    // Habilita os IRQs
 	enableIRs();
 }
 
+/**
+ * @brief Verifica se há algum obstáculo na esquerda e se sim, faz o veículo virar para a direita.
+ * @param segundos float - tempo em segundos que o veículo vai rotacionar
+ */
 void verifica_vira_esquerda(float segundos) {
 	if (flagE == 1) {
+        // Vira para a direita, por x segundos
 		vira_direita(segundos);
 	}
 }
 
+/**
+ * @brief Verifica se há algum obstáculo na direita e se sim, faz o veículo virar para a esquerda.
+ * @param segundos float - tempo em segundos que o veículo vai rotacionar
+ */
 void verifica_vira_direita(float segundos) {
 	if (flagD == 1) {
+        // Vira para a esquerda, por x segundos
 		vira_esquerda(segundos);
 	}
 }
 
-/* USER CODE END 4 */
-
-/* USER CODE BEGIN Header_StartDefaultTask */
 /**
   * @brief  Function implementing the defaultTask thread.
   * @param  argument: Not used
   * @retval None
   */
-/* USER CODE END Header_StartDefaultTask */
 void StartDefaultTask(void *argument)
 {
-  /* USER CODE BEGIN 5 */
-  /* Infinite loop */
-
-	// Espera os 5 segundos
+	// Espera os 5 segundos iniciais
 	osDelay(500);
 
 	for(;;)
   {
-		// Para o robô e espera 3 segundos
+		// Para o carro e espera 3 segundos
 		stopRobot();
 		osDelay(300);
 
-
+        // Verifica se há algum obstáculo na frente do carro
 		if (flagFE) {
-//			vira_direita(0.05);
+            //vira_direita(0.05);
+
+            // Se há obstáculo, faz as verificações de rotacionar para a direita e esquerda
 			verifica_vira_direita(0.05);
 			verifica_vira_esquerda(0.05);
+
+            // Aguarda 1 segundo
 			osDelay(100);
 
+            // Verifica novamente se existe algum obstáculo na frente do carro
 			if (flagFE) {
+                // Se sim, faz o carro andar para trás e aguardar 1 segundo
 				backwardsRobot();
 				osDelay(100);
 
+                // Verifica então se o carro pode virar para a direita, e aguarda novamente 1 segundo
 				verifica_vira_direita(0.05);
 				osDelay(100);
 			}
 
+            // Faz o carro andar para frente, e aguarda 3 segundos
 			fowardRobot();
 			osDelay(100);
 		} else {
+            // Faz as verificações de rotacionar para a direita e esquerda, e aguarda 1 segundo
 			verifica_vira_direita(0.05);
 			verifica_vira_esquerda(0.05);
 			osDelay(100);
 
+            // Faz o robô andar para frente, e aguarda 1 segundo
 			fowardRobot();
 			osDelay(100);
 		}
 
-//		if (flagFE || flagFD) {
-//			if (flagE && !flagD){
-//				vira_direita(0.05);
-//				fowardRobot();
-//			} else
-//			if (flagD && !flagE) {
-//				vira_esquerda(0.05);
-//				fowardRobot();
-//			} else
-//			if (!flagE && !flagD) {
-//				verifica_vira_direita(0.05);
-//				fowardRobot();
-//			} else
-//			if (flagE && flagD) {
-//				while (flagE && flagD) {
-//					backwardsRobot();
-//					osDelay(100);
-//					stopRobot();
-//				}
-//			} else {
-//				verifica_vira_direita(0.05);
-//				fowardRobot();
-//			}
-//		} else {
-//
-//		// Verifica esquerda, se tem obstáculo vira direita
-//		verifica_vira_esquerda(0.05);
-//		// Verifica direita, se tem obstáculo vira esquerda
-//		verifica_vira_direita(0.05);
-//
-//		fowardRobot();
-//		osDelay(200);
-//		}
+/**
+ * O código abaixo é o antigo, que estava com complicações pra ser executado
+ * Tem algo antes de começar ele aqui
+ *
+ *  for(;;)
+ *  {
+ *      // Para o carro e espera 3 segundos
+ *      stopRobot();
+ *      osDelay(300);
+ *  if (flagFE || flagFD) {
+ *      if (flagE && !flagD){
+ *      	vira_direita(0.05);
+ *      	fowardRobot();
+ *      } else
+ *      if (flagD && !flagE) {
+ *      	vira_esquerda(0.05);
+ *      	fowardRobot();
+ *      } else
+ *      if (!flagE && !flagD) {
+ *      	verifica_vira_direita(0.05);
+ *      	fowardRobot();
+ *      } else
+ *      if (flagE && flagD) {
+ *      	while (flagE && flagD) {
+ *      		backwardsRobot();
+ *      		osDelay(100);
+ *      		stopRobot();
+ *      }
+ * 	    } else {
+ * 	    	verifica_vira_direita(0.05);
+ * 	    	fowardRobot();
+ * 	    }
+ * } else {
+ *      // Verifica esquerda, se tem obstáculo vira direita
+ *      verifica_vira_esquerda(0.05);
+ *      // Verifica direita, se tem obstáculo vira esquerda
+ *      verifica_vira_direita(0.05);
+ *      fowardRobot();
+ *      osDelay(200);
+ * }
+ */
   }
 }
 
-  /* USER CODE END 5 */
-
-
+/* USER CODE END 5 */
 /* USER CODE BEGIN Header_StartTask02 */
 /**
 * @brief Function implementing the myTask02 thread.
@@ -962,9 +1068,7 @@ void StartTask02(void *argument)
   /* Infinite loop */
   for(;;)
   {
-
 	  osDelay(5);
-
   }
   /* USER CODE END StartTask02 */
 }
@@ -981,8 +1085,6 @@ void StartTask03(void *argument)
   /* USER CODE BEGIN StartTask03 */
   /* Infinite loop */
   for(;;){
-
-
   }
   /* USER CODE END StartTask03 */
 }
@@ -1000,67 +1102,12 @@ void StartTask04(void *argument)
 
   /* Infinite loop */
   for(;;){
-	  /*  // Função principal que implementa a lógica descrita
-	  void movimentacaoRobot(void) {
 
-	     // Contagem de 5 segundos com o buzzer antes de iniciar
-	      HAL_GPIO_WritePin(BUZZER_PORT, BUZZER_PIN, GPIO_PIN_SET);
-	      HAL_Delay(5000);
-	      HAL_GPIO_WritePin(BUZZER_PORT, BUZZER_PIN, GPIO_PIN_RESET);
-
-	      // Verificação dos sensores e escolha do movimento
-	      while (1) {
-	          if (flagMETA) {
-	              // Parada ao encontrar a meta
-	              stopRobot();
-	               HAL_GPIO_WritePin(BUZZER_PORT, BUZZER_PIN, GPIO_PIN_SET);  // Aciona o buzzer para sinalizar
-	              HAL_Delay(2000); // Tempo que o buzzer ficará ativo
-	              HAL_GPIO_WritePin(BUZZER_PORT, BUZZER_PIN, GPIO_PIN_RESET);
-	              break;  // Sai do loop
-	          }
-
-	          if (flagFE && flagFD) {
-	              // Se houver paredes na frente, tentar virar
-	              if (flagD && !flagE) {
-	                  movimento_curvaCompletaEsquerda();
-	              } else if (flagE && !flagD) {
-	                  movimento_curvaCompletaDireita();
-	              } else if (!flagD && !flagE) {
-	                  // Se não houver paredes laterais, escolher uma direção
-	                  movimento_curvaCompletaDireita();
-	              } else {
-	                  // Se estiver cercado, mover para trás
-	                  backwardsRobot();
-	              }
-	          } else if (flagD) {
-	              // Se houver parede à direita, seguir em frente ou virar para a esquerda
-	              if (flagE) {
-	                  fowardRobot();
-	              } else {
-	                  movimento_curvaCompletaEsquerda();
-	              }
-	          } else if (flagE) {
-	              // Se houver parede à esquerda, seguir em frente ou virar para a direita
-	              if (flagD) {
-	                  fowardRobot();
-	              } else {
-	                  movimento_curvaCompletaDireita();
-	              }
-	          } else {
-	              // Se não houver paredes, seguir em frente
-	              fowardRobot();
-	          }
-
-	          // Pequeno delay para permitir que os sensores atualizem as flags
-	          HAL_Delay(100);
-	      }
-	  }
 
   }  */
   /* USER CODE END StartTask04 */
 }
 }
-
 
 /**
   * @brief  Period elapsed callback in non blocking mode
