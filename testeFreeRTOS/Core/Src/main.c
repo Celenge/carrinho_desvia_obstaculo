@@ -739,7 +739,8 @@ void stopRobot(void)
  * @brief Faz o carro andar para trás, setando ambas as rotações como anti-horárias
  * @param void
  */
-void backwardsRobot(void)
+void backwardRobot(void)
+
 {
 
     // Roda Direita
@@ -1073,7 +1074,7 @@ void StartDefaultTask(void *argument)
 
 
         // guarda o estado atual em um array de ints para verificar os obstáculos do estado atual
-        estado_atual = atualizar_lei_atual(estado_atual);
+        estado_atual = atualizar_estado_atual(estado_atual);
 
         // Verifica se o caminho na parte da frente tá livre
         if (estado_atual[frente] == 0)
@@ -1162,7 +1163,7 @@ void StartDefaultTask(void *argument)
             }
         }
     }
-
+}
     /* USER CODE END 5 */
     /* USER CODE BEGIN Header_StartTask02 */
     /**
@@ -1171,13 +1172,13 @@ void StartDefaultTask(void *argument)
      * @retval None
      */
     /* USER CODE END Header_StartTask02 */
-    void StartTask02(void *argument)
+void StartTask02(void *argument)
     {
         /* USER CODE BEGIN StartTask02 */
         /* Infinite loop */
         for (;;)
         {
-            osDelay(5);
+
         }
         /* USER CODE END StartTask02 */
     }
@@ -1214,10 +1215,10 @@ void StartDefaultTask(void *argument)
         for (;;)
         {
         }
-        * /
+
         /* USER CODE END StartTask04 */
     }
-}
+
 
 /**
  * @brief  Period elapsed callback in non blocking mode
