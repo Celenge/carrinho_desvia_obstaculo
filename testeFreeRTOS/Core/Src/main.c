@@ -1079,6 +1079,13 @@ void StartDefaultTask(void *argument)
 /* USER CODE END Header_StartTask02 */
 void StartTask02(void *argument)
 {
+
+
+	 if (HAL_GPIO_ReadPin(Meta_Pin, Meta_Pin) == GPIO_PIN_RESET) {
+	            // Move o carrinho por 0.5 segundos
+		 	 play_tone(NOTE_A4, 5);
+	        }
+	        HAL_Delay(100);  // Pequeno atraso para evitar leituras contínuas
   /* USER CODE BEGIN StartTask02 */
   /* Infinite loop */
   for(;;)
