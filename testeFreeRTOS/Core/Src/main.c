@@ -985,6 +985,7 @@ void StartDefaultTask(void *argument)
 
 	for(;;)
   {
+		if (HAL_GPIO_ReadPin(Meta_Pin, Meta_Pin) == GPIO_PIN_SET){
 		// Para o carro e espera 3 segundos
 		stopRobot();
 		osDelay(300);
@@ -1024,6 +1025,16 @@ void StartDefaultTask(void *argument)
 			fowardRobot();
 			osDelay(100);
 		}
+		}
+
+	 if (HAL_GPIO_ReadPin(Meta_Pin, Meta_Pin) == GPIO_PIN_RESET){
+
+		 osDelay(100);
+		 stopRobot();
+	 }
+
+  }
+}
 
 /**
  * O código abaixo é o antigo, que estava com complicações pra ser executado
