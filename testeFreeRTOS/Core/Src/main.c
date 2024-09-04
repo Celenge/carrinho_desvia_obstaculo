@@ -1104,10 +1104,10 @@ void StartTask04(void *argument)
   for(;;){
 
 
-  }  */
+  }
   /* USER CODE END StartTask04 */
 }
-}
+
 
 /**
   * @brief  Period elapsed callback in non blocking mode
