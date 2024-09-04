@@ -1,6 +1,3 @@
-/* testestestestestestestes */
-
-
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
@@ -185,8 +182,8 @@ int main(void)
               /* PWM Generation Error */
               Error_Handler();
             }
-    TIM1-> CCR1 = 4000;   //DIREITO
-    TIM1-> CCR3 = 4795;
+    TIM1-> CCR1 = 3500;   //DIREITO // 4000
+    TIM1-> CCR3 = 3900;				// 4795
 
 
   /* USER CODE END 2 */
@@ -551,11 +548,11 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(LEBPC7_GPIO_Port, LEBPC7_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : B1_Pin Meta_Pin */
-  GPIO_InitStruct.Pin = B1_Pin|Meta_Pin;
+  /*Configure GPIO pin : B1_Pin */
+  GPIO_InitStruct.Pin = B1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+  HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : Frente_Direito_IR_Pin Frente_Esquerda_IR_Pin Direito_IR_Pin */
   GPIO_InitStruct.Pin = Frente_Direito_IR_Pin|Frente_Esquerda_IR_Pin|Direito_IR_Pin;
@@ -595,8 +592,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-
-
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI0_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(EXTI0_IRQn);
@@ -612,9 +607,6 @@ static void MX_GPIO_Init(void)
 
   HAL_NVIC_SetPriority(EXTI15_10_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
-
-  HAL_NVIC_SetPriority(EXTI1_IRQn, 5, 0);
-  HAL_NVIC_EnableIRQ(EXTI1_IRQn);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
@@ -669,17 +661,7 @@ void IR_frente_direita_func(void){
 	    	flagFD = 1;
 	    }
 }
-void IR_meta_func(void) {  // Função para o sensor de meta
-	      if((GPIOC -> IDR & GPIO_PIN_1)){ // IF STATUS PIN is HIGH
-	        // printf("\rSensor de meta: Livre! \r\n");
-	        flagMETA = 0;
-	      }
-	      if(!(GPIOC -> IDR & GPIO_PIN_1)){ // IF STATUS PIN is LOW
-	        // printf("\rSensor de meta: Alvo atingido!\r\n");
-	        flagMETA = 1;
-	      }
 
-}
 void CallBack_PC10(void)
 {
 	count_esq = count_esq + 1;
@@ -726,7 +708,7 @@ int decreasePWMDIR(int currentPWM, int gain){
 }
 
 
-
+//para o carrinho
 void stopRobot(void){
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_SET);    //AMARELO CARRO
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_SET);    //GREEN DO CARRO
@@ -734,6 +716,7 @@ void stopRobot(void){
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
 }
 
+//move pra trás - ré
 void backwardsRobot(void){
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_SET);    //AMARELO CARRO
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);  // GREEN DO CARRO
@@ -753,21 +736,17 @@ void turnRight(void){
 
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_RESET);    //AMARELO CARRO
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_SET);  // GREEN DO CARRO
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
 }
 void turnLeft(void){
 
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_SET);    //AMARELO CARRO
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);  // GREEN DO CARRO
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
 }
-void printSensorState(void){
-	printf("\r     Sensor state update! \r \n");
-	printf("\r     %d      %d   \r \n", flagFE, flagFD);
-	printf("\r %d              %d \r \n", flagE, flagD);
-}
+
 void movimento_curvaCompletaEsquerda(void){
 	HAL_NVIC_DisableIRQ(EXTI15_10_IRQn);
 	HAL_NVIC_DisableIRQ(EXTI2_IRQn);
@@ -821,6 +800,67 @@ void movimento_curvaCompletaDireita(void){
 	HAL_NVIC_EnableIRQ(EXTI1_IRQn);
 
 }
+
+void disableIRs(void) {
+	HAL_NVIC_DisableIRQ(EXTI15_10_IRQn);
+	HAL_NVIC_DisableIRQ(EXTI2_IRQn);
+	HAL_NVIC_DisableIRQ(EXTI3_IRQn);
+	HAL_NVIC_DisableIRQ(EXTI0_IRQn);
+	HAL_NVIC_DisableIRQ(EXTI1_IRQn);
+
+}
+
+void enableIRs(void) {
+	HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
+	HAL_NVIC_EnableIRQ(EXTI2_IRQn);
+	HAL_NVIC_EnableIRQ(EXTI3_IRQn);
+	HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+	HAL_NVIC_EnableIRQ(EXTI1_IRQn);
+}
+
+void vira_direita(float segundos) {
+	disableIRs();
+
+
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_SET);    //AMARELO CARRO
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);  // GREEN DO CARRO
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
+
+	float tempoTotal = 1000 * segundos;
+
+	osDelay(tempoTotal);
+
+	enableIRs();
+}
+
+void vira_esquerda(float segundos) {
+	disableIRs();
+
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_RESET);    //AMARELO CARRO
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_SET);  // GREEN DO CARRO
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
+
+	float tempoTotal = 1000 * segundos;
+
+	osDelay(tempoTotal);
+
+	enableIRs();
+}
+
+void verifica_vira_esquerda(float segundos) {
+	if (flagE == 1) {
+		vira_direita(segundos);
+	}
+}
+
+void verifica_vira_direita(float segundos) {
+	if (flagD == 1) {
+		vira_esquerda(segundos);
+	}
+}
+
 /* USER CODE END 4 */
 
 /* USER CODE BEGIN Header_StartDefaultTask */
@@ -835,13 +875,79 @@ void StartDefaultTask(void *argument)
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
 
+	// Espera os 5 segundos
+	osDelay(500);
+
 	for(;;)
   {
+		// Para o robô e espera 3 segundos
+		stopRobot();
+		osDelay(300);
 
-	osDelay(200);
+
+		if (flagFE) {
+//			vira_direita(0.05);
+			verifica_vira_direita(0.05);
+			verifica_vira_esquerda(0.05);
+			osDelay(100);
+
+			if (flagFE) {
+				backwardsRobot();
+				osDelay(100);
+
+				verifica_vira_direita(0.05);
+				osDelay(100);
+			}
+
+			fowardRobot();
+			osDelay(100);
+		} else {
+			verifica_vira_direita(0.05);
+			verifica_vira_esquerda(0.05);
+			osDelay(100);
+
+			fowardRobot();
+			osDelay(100);
+		}
+
+//		if (flagFE || flagFD) {
+//			if (flagE && !flagD){
+//				vira_direita(0.05);
+//				fowardRobot();
+//			} else
+//			if (flagD && !flagE) {
+//				vira_esquerda(0.05);
+//				fowardRobot();
+//			} else
+//			if (!flagE && !flagD) {
+//				verifica_vira_direita(0.05);
+//				fowardRobot();
+//			} else
+//			if (flagE && flagD) {
+//				while (flagE && flagD) {
+//					backwardsRobot();
+//					osDelay(100);
+//					stopRobot();
+//				}
+//			} else {
+//				verifica_vira_direita(0.05);
+//				fowardRobot();
+//			}
+//		} else {
+//
+//		// Verifica esquerda, se tem obstáculo vira direita
+//		verifica_vira_esquerda(0.05);
+//		// Verifica direita, se tem obstáculo vira esquerda
+//		verifica_vira_direita(0.05);
+//
+//		fowardRobot();
+//		osDelay(200);
+//		}
   }
-  /* USER CODE END 5 */
 }
+
+  /* USER CODE END 5 */
+
 
 /* USER CODE BEGIN Header_StartTask02 */
 /**
@@ -874,12 +980,7 @@ void StartTask03(void *argument)
 {
   /* USER CODE BEGIN StartTask03 */
   /* Infinite loop */
-  for(;;)
-  {
-
-		  movimento_curvaCompletaEsquerda();
-
-	  osDelay(1000);
+  for(;;){
 
 
   }
@@ -893,7 +994,8 @@ void StartTask03(void *argument)
 * @retval None
 */
 /* USER CODE END Header_StartTask04 */
-void StartTask04(void *argument){
+void StartTask04(void *argument)
+{
   /* USER CODE BEGIN StartTask04 */
 
   /* Infinite loop */
@@ -958,6 +1060,8 @@ void StartTask04(void *argument){
   /* USER CODE END StartTask04 */
 }
 }
+
+
 /**
   * @brief  Period elapsed callback in non blocking mode
   * @note   This function is called  when TIM3 interrupt took place, inside
@@ -966,7 +1070,8 @@ void StartTask04(void *argument){
   * @param  htim : TIM handle
   * @retval None
   */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
   /* USER CODE BEGIN Callback 0 */
 	if (htim->Instance == TIM2) {
 		ajustePWM();
@@ -980,7 +1085,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
   /* USER CODE END Callback 1 */
 }
-
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
   /* Prevent unused argument(s) compilation warning */
@@ -1006,24 +1110,23 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   if (GPIO_Pin== Frente_Direito_IR_Pin){
 	  IR_frente_direita_func();
     }
-  if (GPIO_Pin== Meta_Pin){
-  	  IR_meta_func();
-      }
+
 }
-void Error_Handler(void){
-  /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
-  __disable_irq();
-  while (1){
-  }
-}
-/* USER CODE END Error_Handler_Debug */
+
 /**
   * @brief  This function is executed in case of error occurrence.
   * @retval None
   */
-
-
+void Error_Handler(void)
+{
+  /* USER CODE BEGIN Error_Handler_Debug */
+  /* User can add his own implementation to report the HAL error return state */
+  __disable_irq();
+  while (1)
+  {
+  }
+  /* USER CODE END Error_Handler_Debug */
+}
 
 #ifdef  USE_FULL_ASSERT
 /**
@@ -1033,7 +1136,8 @@ void Error_Handler(void){
   * @param  line: assert_param error line source number
   * @retval None
   */
-void assert_failed(uint8_t *file, uint32_t line){
+void assert_failed(uint8_t *file, uint32_t line)
+{
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,
      ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
