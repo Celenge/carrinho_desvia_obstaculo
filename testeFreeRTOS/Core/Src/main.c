@@ -627,6 +627,24 @@ static void MX_GPIO_Init(void)
 /* USER CODE END MX_GPIO_Init_2 */
 }
 
+
+void play_tone(uint16_t frequency, uint32_t duration) {
+    if (frequency == 0) {
+        HAL_Delay(duration);
+        return;
+    }
+
+    uint32_t period = 1000000 / frequency;
+    uint32_t half_period = period / 2;
+
+    for (uint32_t i = 0; i < (duration * 1000) / period; i++) {
+        HAL_GPIO_WritePin(BUZZER_PORT, BUZZER_PIN, GPIO_PIN_SET);
+        HAL_Delay(half_period);
+        HAL_GPIO_WritePin(BUZZER_PORT, BUZZER_PIN, GPIO_PIN_RESET);
+        HAL_Delay(half_period);
+    }
+}
+
 /* USER CODE BEGIN 4 */
 void ajustePWM (void){
 }
