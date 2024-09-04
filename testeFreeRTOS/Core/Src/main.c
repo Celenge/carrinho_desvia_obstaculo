@@ -918,7 +918,7 @@ void StartDefaultTask(void *argument)
 	// Espera os 5 segundos
 	osDelay(500);
 
-/*	for(;;)
+	for(;;)
   {
 		// Para o robô e espera 3 segundos
 		stopRobot();
@@ -949,6 +949,7 @@ void StartDefaultTask(void *argument)
 			fowardRobot();
 			osDelay(100);
 		}
+}
 
 //		if (flagFE || flagFD) {
 //			if (flagE && !flagD){
@@ -983,8 +984,8 @@ void StartDefaultTask(void *argument)
 //		fowardRobot();
 //		osDelay(200);
 //		}
-  }*/
 }
+
 
   /* USER CODE END 5 */
 
@@ -1004,7 +1005,7 @@ void StartTask02(void *argument)
 
 	 if (HAL_GPIO_ReadPin(Meta_Pin, Meta_Pin) == GPIO_PIN_RESET) {
 	            // Move o carrinho por 0.5 segundos
-		 	 //play_tone(NOTE_A4, 500);
+		 	 play_tone(NOTE_A4, 5);
 	        }
 	        HAL_Delay(100);  // Pequeno atraso para evitar leituras contínuas
 
