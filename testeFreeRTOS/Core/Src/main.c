@@ -1051,9 +1051,6 @@ void StartDefaultTask(void *argument)
 		 stopRobot();
 	 }
 
-  }
-}
-
 /**
  * O código abaixo é o antigo, que estava com complicações pra ser executado
  * Tem algo antes de começar ele aqui
@@ -1095,7 +1092,7 @@ void StartDefaultTask(void *argument)
  *      osDelay(200);
  * }
  */
-  }
+}
 }
 
 /* USER CODE END 5 */
@@ -1106,6 +1103,8 @@ void StartDefaultTask(void *argument)
 * @retval None
 */
 /* USER CODE END Header_StartTask02 */
+
+
 void StartTask02(void *argument)
 {
 
