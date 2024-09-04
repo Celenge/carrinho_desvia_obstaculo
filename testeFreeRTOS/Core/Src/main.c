@@ -1,5 +1,5 @@
 //testestes
-
+//teste buzzer
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
@@ -607,7 +607,7 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(BUZZER_PORT, &GPIO_InitStruct);
 
-  // Configuração do pino meta como entrada
+ // Configuração do pino meta como entrada
   GPIO_InitStruct.Pin = Meta_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -912,203 +912,28 @@ void verifica_vira_direita(float segundos) {
 /* USER CODE END Header_StartDefaultTask */
 void StartDefaultTask(void *argument)
 {
-  /* USER CODE BEGIN 5 */
-  /* Infinite loop */
-
-	// Espera os 5 segundos
-	osDelay(500);
-
-	for(;;)
-  {
-		// Para o robô e espera 3 segundos
-		stopRobot();
-		osDelay(300);
-
-
-		if (flagFE) {
-//			vira_direita(0.05);
-			verifica_vira_direita(0.05);
-			verifica_vira_esquerda(0.05);
-			osDelay(100);
-
-			if (flagFE) {
-				backwardsRobot();
-				osDelay(100);
-
-				verifica_vira_direita(0.05);
-				osDelay(100);
-			}
-
-			fowardRobot();
-			osDelay(100);
-		} else {
-			verifica_vira_direita(0.05);
-			verifica_vira_esquerda(0.05);
-			osDelay(100);
-
-			fowardRobot();
-			osDelay(100);
-		}
+	// if (HAL_GPIO_ReadPin(Meta_Pin, Meta_Pin) == GPIO_PIN_RESET) {
+	            // Move o carrinho por 0.5 segundos
+		// 	 play_tone(NOTE_A4, 500);
+	       // }
+	      //  HAL_Delay(100);  // Pequeno atraso para evitar leituras contínuas
 }
-
-//		if (flagFE || flagFD) {
-//			if (flagE && !flagD){
-//				vira_direita(0.05);
-//				fowardRobot();
-//			} else
-//			if (flagD && !flagE) {
-//				vira_esquerda(0.05);
-//				fowardRobot();
-//			} else
-//			if (!flagE && !flagD) {
-//				verifica_vira_direita(0.05);
-//				fowardRobot();
-//			} else
-//			if (flagE && flagD) {
-//				while (flagE && flagD) {
-//					backwardsRobot();
-//					osDelay(100);
-//					stopRobot();
-//				}
-//			} else {
-//				verifica_vira_direita(0.05);
-//				fowardRobot();
-//			}
-//		} else {
-//
-//		// Verifica esquerda, se tem obstáculo vira direita
-//		verifica_vira_esquerda(0.05);
-//		// Verifica direita, se tem obstáculo vira esquerda
-//		verifica_vira_direita(0.05);
-//
-//		fowardRobot();
-//		osDelay(200);
-//		}
-}
-
-
-  /* USER CODE END 5 */
-
-
-/* USER CODE BEGIN Header_StartTask02 */
-/**
-* @brief Function implementing the myTask02 thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_StartTask02 */
 void StartTask02(void *argument)
 {
-  /* USER CODE BEGIN StartTask02 */
-  /* Infinite loop */
+	if (HAL_GPIO_ReadPin(Meta_Pin, Meta_Pin) == GPIO_PIN_RESET){
+		stopRobot();
+	}
 
-
-	 if (HAL_GPIO_ReadPin(Meta_Pin, Meta_Pin) == GPIO_PIN_RESET) {
-	            // Move o carrinho por 0.5 segundos
-		 	 play_tone(NOTE_A4, 5);
-	        }
-	        HAL_Delay(100);  // Pequeno atraso para evitar leituras contínuas
-
-
-  for(;;)
-  {
-
-	  osDelay(5);
-
-  }
-  /* USER CODE END StartTask02 */
+	if (HAL_GPIO_ReadPin(Meta_Pin, Meta_Pin) == GPIO_PIN_SET){
+		fowardRobot();
+		play_tone(NOTE_A4, 500);
+	}
 }
-
-/* USER CODE BEGIN Header_StartTask03 */
-/**
-* @brief Function implementing the myTask03 thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_StartTask03 */
 void StartTask03(void *argument)
 {
-  /* USER CODE BEGIN StartTask03 */
-  /* Infinite loop */
-  for(;;){
-
-
-  }
-  /* USER CODE END StartTask03 */
 }
-
-/* USER CODE BEGIN Header_StartTask04 */
-/**
-* @brief Function implementing the myTask04 thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_StartTask04 */
 void StartTask04(void *argument)
 {
-  /* USER CODE BEGIN StartTask04 */
-
-  /* Infinite loop */
-  for(;;){
-	  /*  // Função principal que implementa a lógica descrita
-	  void movimentacaoRobot(void) {
-
-	     // Contagem de 5 segundos com o buzzer antes de iniciar
-	      HAL_GPIO_WritePin(BUZZER_PORT, BUZZER_PIN, GPIO_PIN_SET);
-	      HAL_Delay(5000);
-	      HAL_GPIO_WritePin(BUZZER_PORT, BUZZER_PIN, GPIO_PIN_RESET);
-
-	      // Verificação dos sensores e escolha do movimento
-	      while (1) {
-	          if (flagMETA) {
-	              // Parada ao encontrar a meta
-	              stopRobot();
-	               HAL_GPIO_WritePin(BUZZER_PORT, BUZZER_PIN, GPIO_PIN_SET);  // Aciona o buzzer para sinalizar
-	              HAL_Delay(2000); // Tempo que o buzzer ficará ativo
-	              HAL_GPIO_WritePin(BUZZER_PORT, BUZZER_PIN, GPIO_PIN_RESET);
-	              break;  // Sai do loop
-	          }
-
-	          if (flagFE && flagFD) {
-	              // Se houver paredes na frente, tentar virar
-	              if (flagD && !flagE) {
-	                  movimento_curvaCompletaEsquerda();
-	              } else if (flagE && !flagD) {
-	                  movimento_curvaCompletaDireita();
-	              } else if (!flagD && !flagE) {
-	                  // Se não houver paredes laterais, escolher uma direção
-	                  movimento_curvaCompletaDireita();
-	              } else {
-	                  // Se estiver cercado, mover para trás
-	                  backwardsRobot();
-	              }
-	          } else if (flagD) {
-	              // Se houver parede à direita, seguir em frente ou virar para a esquerda
-	              if (flagE) {
-	                  fowardRobot();
-	              } else {
-	                  movimento_curvaCompletaEsquerda();
-	              }
-	          } else if (flagE) {
-	              // Se houver parede à esquerda, seguir em frente ou virar para a direita
-	              if (flagD) {
-	                  fowardRobot();
-	              } else {
-	                  movimento_curvaCompletaDireita();
-	              }
-	          } else {
-	              // Se não houver paredes, seguir em frente
-	              fowardRobot();
-	          }
-
-	          // Pequeno delay para permitir que os sensores atualizem as flags
-	          HAL_Delay(100);
-	      }
-	  }
-
-  }  */
-  /* USER CODE END StartTask04 */
-}
 }
 
 

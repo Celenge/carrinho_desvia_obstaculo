@@ -33,9 +33,9 @@
 ../Core/Src/main.c:892:6:verifica_vira_esquerda	16	static
 ../Core/Src/main.c:898:6:verifica_vira_direita	16	static
 ../Core/Src/main.c:913:6:StartDefaultTask	16	static
-../Core/Src/main.c:1000:6:StartTask02	16	static
-../Core/Src/main.c:1029:6:StartTask03	16	static
-../Core/Src/main.c:1047:6:StartTask04	16	static
-../Core/Src/main.c:1123:6:HAL_TIM_PeriodElapsedCallback	16	static
-../Core/Src/main.c:1138:6:HAL_GPIO_EXTI_Callback	16	static
-../Core/Src/main.c:1170:6:Error_Handler	4	static,ignoring_inline_asm
+../Core/Src/main.c:921:6:StartTask02	16	static
+../Core/Src/main.c:932:6:StartTask03	16	static
+../Core/Src/main.c:935:6:StartTask04	16	static
+../Core/Src/main.c:948:6:HAL_TIM_PeriodElapsedCallback	16	static
+../Core/Src/main.c:963:6:HAL_GPIO_EXTI_Callback	16	static
+../Core/Src/main.c:995:6:Error_Handler	4	static,ignoring_inline_asm
