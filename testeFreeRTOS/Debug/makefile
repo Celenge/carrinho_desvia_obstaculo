@@ -64,8 +64,8 @@ all: main-build
 main-build: testeFreeRTOS.elf secondary-outputs
 
 # Tool invocations
-testeFreeRTOS.elf testeFreeRTOS.map: $(OBJS) $(USER_OBJS) C:\Users\Camil\Music\Embarcados\testeFreeRTOS\STM32G431RBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "testeFreeRTOS.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\Camil\Music\Embarcados\testeFreeRTOS\STM32G431RBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="testeFreeRTOS.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
+testeFreeRTOS.elf testeFreeRTOS.map: $(OBJS) $(USER_OBJS) C:\Users\Camil\Music\Projeto_Embarcados\testeFreeRTOS\STM32G431RBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "testeFreeRTOS.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\Camil\Music\Projeto_Embarcados\testeFreeRTOS\STM32G431RBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="testeFreeRTOS.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
